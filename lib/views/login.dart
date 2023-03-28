@@ -1,6 +1,9 @@
 import 'package:fin_infocom/globals.dart';
+import 'package:fin_infocom/utils/utils.dart';
 import 'package:fin_infocom/views/homepage.dart';
 import 'package:fin_infocom/views/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
+  bool isVisible = false;
 
   late TextEditingController emailController;
 
@@ -65,10 +69,24 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),color: Colors.white),
-                  child: TextField(
+                  child: TextFormField(
+                    validator: (value) {
+                     var res =  validateEmail(value??"");
+                     if(!res){
+                       Get.snackbar("Email", "check your email",backgroundColor: Colors.white,colorText: Color(0xff990d35),duration: Duration(milliseconds: 900));
+                       return "enter proper email";
+                    
+                     }
+                     setState(() {
+                       
+                     });
+                      
+                    },
+                  
                   
                     controller: emailController,
                     decoration: InputDecoration(
+                      
                        
                       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       labelText: 'Email',
@@ -81,10 +99,31 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),color: Colors.white),
-                  child: TextField(
+                  child: TextFormField(
+                    obscureText: isVisible,
+                    validator: (value) {
+                    var res =   validatePassword(value??"");
+                    print(res);
+                     if(res==false){
+
+                      Get.snackbar("Password", "must contain at least 1 capital ,1 symbol, minimum 8 characters",duration: Duration(milliseconds: 900),colorText: Color(0xff990d35),backgroundColor: Colors.white);
+                      return "enter correct format password";
+                    }
+                    },
                   
                     controller: passwordController,
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          isVisible = !isVisible;
+                          setState(() {
+                            
+                          });
+                          
+                        },
+                         icon: Icon(isVisible?Icons.visibility:Icons.visibility_off)
+                         ),
+                      
                        
                       contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                       labelText: 'password',
@@ -103,12 +142,14 @@ class _LoginPageState extends State<LoginPage> {
                       if (_formkey.currentState!.validate())  {
 
                         try {
-                          var user = await     auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-                          Get.snackbar("Logged In", "login successfull",backgroundColor: Color(0xff990d35,),colorText: Colors.white);
-                          Get.to(HomePage(user: user.user));
+                          var user = await     FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+                          
+                          Get.snackbar("Logged In", "login successfull",backgroundColor: Color(0xff990d35,),colorText: Colors.white,duration: Duration(milliseconds: 900));
+                          
+                          Get.to(HomePage());
                           
                         } catch (e) {
-                          Get.snackbar("Error", "Something went wrong",colorText: Colors.white);
+                          Get.snackbar("Error", "Something went wrong",colorText: Colors.white,duration: Duration(milliseconds: 900),backgroundColor: Color(0xff990d35));
                           
                         }
                    

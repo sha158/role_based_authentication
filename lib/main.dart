@@ -1,3 +1,5 @@
+
+import 'package:fin_infocom/views/homepage.dart';
 import 'package:fin_infocom/views/login.dart';
 import 'package:fin_infocom/views/signup.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,7 +8,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: FirebaseOptions(apiKey: "AIzaSyAYSK78awHHxpRJncGte6IVEd8tejGLciQ", appId: "1:618942944822:web:7418eff7af01cb5de42a97", messagingSenderId: "618942944822", projectId: "user-management-ddc2b"));
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 

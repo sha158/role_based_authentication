@@ -36,6 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xff990d35),
       body: Center(
         child: Container(
@@ -128,6 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         try {
                           final newuser = await   auth.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
                           print(newuser);
+                          
 
                         await FirebaseFirestore.instance.collection("users").doc(newuser.user!.uid).set({
                             "email":emailController.text,
